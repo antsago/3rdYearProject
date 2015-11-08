@@ -1,0 +1,7 @@
+reward,nextAction,state,isFirstState
+float,string,string,bool
+,C,C,R
+0,North,0,0
+0,South,0,0
+0,West,0,0
+1,East,0,0
