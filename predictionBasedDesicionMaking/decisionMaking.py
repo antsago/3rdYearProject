@@ -28,6 +28,8 @@ if __name__ == "__main__":
   tdModel = QLearningModel(maze.STATES)
   tdAgent = Agent(maze, tdModel)
   htmAgent = Agent(maze, htmModel)
-  tdAgent.run()
+  tdPerformance = tdAgent.run()
   print ">>Change agent"
-  htmAgent.run()
+  htmPerformance = htmAgent.run()
+  print tdPerformance
+  print htmPerformance

@@ -9,29 +9,37 @@ class Agent:
     self.maze = maze
 
   def run(self):  
-    self.trainModel(2)
-    print "### End training, start testing ###"
-    self.testModel(2)
+    trainPerformance = self.trainModel(self.DEFAULT_TRAINING_ITERATIONS)
+    testPerformance = self.testModel(self.DEFAULT_TEST_ITERATIONS)
+    return trainPerformance, testPerformance
   
   def trainModel(self, trainIterations):
-    self.iterateMaze(self.randomPolicy, trainIterations)
+    return self.iterateMaze(self.randomPolicy, trainIterations)
   
   def testModel(self, testIterations):
-    self.iterateMaze(self.bestNextStatePolicy, testIterations)
+    return self.iterateMaze(self.bestNextStatePolicy, testIterations)
   
   def iterateMaze(self, policy, noIterations):
+    performanceHistory = []
     for iteration in range(noIterations):
-      self.solveMaze(policy, iteration)
+      iterationPerformance = self.solveMaze(policy)
       self.model.problemFinished()
       self.maze.reset()
+      performanceHistory.append([iteration, iterationPerformance])
+    return performanceHistory
   
-  def solveMaze(self, policy, iteration):
+  def solveMaze(self, policy):
+    mazeSolvedInStep = 0
     while self.maze.isNotFinished():
+      self._performMazeIteration(policy)
+      mazeSolvedInStep += 1
+    return mazeSolvedInStep
+ 
+  def _performMazeIteration(self, policy):
       nextPossibleStates = self.maze.getPossibleActions()
       currentStateReward = self.maze.getReward()
       nextState = policy(self.maze.currentState, currentStateReward, nextPossibleStates)
-      self.moveTo(self.maze.currentState, currentStateReward, nextState)
-      print "At iteration {} took move to state {}".format(iteration, nextState)
+      self.moveTo(self.maze.currentState, currentStateReward, nextState) 
 
   def moveTo(self, currentState, currentStateReward, nextState):
     self.maze.moveTo(nextState)
