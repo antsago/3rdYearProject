@@ -1,8 +1,8 @@
 from random import choice
 
 class Agent:
-  DEFAULT_TRAINING_ITERATIONS = 500
-  DEFAULT_TEST_ITERATIONS = 500
+  DEFAULT_TRAINING_ITERATIONS = 1000000
+  DEFAULT_TEST_ITERATIONS = 20
 
   def __init__(self, maze, model):
     self.model = model
@@ -14,42 +14,39 @@ class Agent:
     return trainPerformance, testPerformance
   
   def trainModel(self, trainIterations):
-    return self.iterateMaze(self.randomPolicy, trainIterations)
+    self.model.setTrainPolicy()
+    return self.iterateMaze(trainIterations)
   
   def testModel(self, testIterations):
-    return self.iterateMaze(self.bestNextStatePolicy, testIterations)
+    self.model.setTestPolicy()
+    return self.iterateMaze(testIterations)
   
-  def iterateMaze(self, policy, noIterations):
+  def iterateMaze(self, noIterations):
     performanceHistory = []
     for iteration in range(noIterations):
-      iterationPerformance = self.solveMaze(policy)
+      iterationPerformance = self.solveMaze()
       self.model.problemFinished()
       self.maze.reset()
       performanceHistory.append([iteration, iterationPerformance])
     return performanceHistory
   
-  def solveMaze(self, policy):
+  def solveMaze(self):
     mazeSolvedInStep = 0
+    accumulatedReward = 0
     while self.maze.isNotFinished():
-      self._performMazeIteration(policy)
+      accumulatedReward += self._performMazeIteration()
       mazeSolvedInStep += 1
-    return mazeSolvedInStep
+    return mazeSolvedInStep, accumulatedReward
  
-  def _performMazeIteration(self, policy):
+  def _performMazeIteration(self):
       nextPossibleStates = self.maze.getPossibleActions()
       currentStateReward = self.maze.getReward()
-      nextState = policy(self.maze.currentState, currentStateReward, nextPossibleStates)
+      nextState = self.model.policy(self.maze.currentState, currentStateReward, nextPossibleStates)
+      print "Move from {} to {} with reward {} and possible states {}".format(self.maze.currentState, nextState, currentStateReward, nextPossibleStates)
       self.moveTo(self.maze.currentState, currentStateReward, nextState) 
+      return currentStateReward
 
   def moveTo(self, currentState, currentStateReward, nextState):
     self.maze.moveTo(nextState)
     self.model.makeMove(currentState, currentStateReward, nextState)
-
-  def bestNextStatePolicy(self, currentState, currentStateReward, nextPossibleStates):
-    predictedRewards = self.model.predictRewards(currentState, currentStateReward, nextPossibleStates)
-    bestReward = max(predictedRewards.values())
-    return choice([state for state in predictedRewards.keys() if predictedRewards[state] == bestReward])
-  
-  def randomPolicy(self, currentState, currentStateReward, nextPossibleStates):
-    return choice(nextPossibleStates)
 

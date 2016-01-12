@@ -1,21 +1,14 @@
 class Maze:
   START_STATE = "S"
-  GOAL_STATE = "G"
   KEY_STATE = "K"
+  GOAL_STATE = "G"
   END_STATE = "E"
   
-  STATES = [START_STATE, GOAL_STATE, KEY_STATE, END_STATE, "C"]
 
-  POSSIBLE_ACTIONS_FROM = \
-  {
-    "S": ["C"],
-    "C": ["K", "G"],
-    "K": ["C"],
-    "G": ["E"],
-  }
-            
-  def __init__(self):
+  def __init__(self, noStates):
     self.reset()
+    self.SimpleStates = range(noStates)
+    self.AllStates = self.SimpleStates + [self.START_STATE, self.END_STATE, self.KEY_STATE, self.GOAL_STATE]
 
   def isNotFinished(self):
     return self.currentState != self.END_STATE
@@ -42,7 +35,16 @@ class Maze:
     return nextState not in self.getPossibleActions()
   
   def getPossibleActionsFrom(self, state):
-    return self.POSSIBLE_ACTIONS_FROM[state]
+    if state == self.START_STATE:
+      return self.SimpleStates + [self.KEY_STATE, self.GOAL_STATE]
+    elif state == self.KEY_STATE:
+      return self.SimpleStates
+    elif state == self.GOAL_STATE:
+      return [self.END_STATE]
+    elif state == self.END_STATE:
+      return []
+    else:
+      return self.SimpleStates[0:state] + self.SimpleStates[state+1:len(self.SimpleStates)] + [self.KEY_STATE, self.GOAL_STATE]
     
   def getRewardFor(self, state):
     if state == self.GOAL_STATE:

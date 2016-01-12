@@ -1,4 +1,5 @@
 from nupic.frameworks.opf.modelfactory import ModelFactory
+from random import choice
 import model_params
 import pickle
 
@@ -36,6 +37,12 @@ class HTMModel:
   def __init__(self, listOfStates):
     moduleParameters = self._getModuleParameters(listOfStates)
     self.htm = self._createHTMModule(moduleParameters)
+
+  def setTrainPolicy(self):
+    self.policy = self.randomPolicy
+
+  def setTestPolicy(self):
+    self.policy = self.bestNextStatePolicy
 
   def predictRewards(self, currentState, currentStateReward, nextPossibleStates):
     pickledModel = self._saveModel()
@@ -87,3 +94,12 @@ class HTMModel:
    
   def _createInput(self, position):
     return dict(zip(self.Headers, position))
+
+  def bestNextStatePolicy(self, currentState, currentStateReward, nextPossibleStates):
+    predictedRewards = self.predictRewards(currentState, currentStateReward, nextPossibleStates)
+    bestReward = max(predictedRewards.values())
+    return choice([state for state in predictedRewards.keys() if predictedRewards[state] == bestReward])
+  
+  def randomPolicy(self, currentState, currentStateReward, nextPossibleStates):
+    return choice(nextPossibleStates)
+
