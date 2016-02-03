@@ -1,16 +1,16 @@
 from random import choice
 
 class Agent:
-  DEFAULT_TRAINING_ITERATIONS = 1000000
-  DEFAULT_TEST_ITERATIONS = 20
 
-  def __init__(self, maze, model):
+  def __init__(self, maze, model, trainingIterations, testingIterations):
     self.model = model
     self.maze = maze
+    self.trainingIterations = trainingIterations
+    self.testingIterations = testingIterations
 
   def run(self):  
-    trainPerformance = self.trainModel(self.DEFAULT_TRAINING_ITERATIONS)
-    testPerformance = self.testModel(self.DEFAULT_TEST_ITERATIONS)
+    trainPerformance = self.trainModel(self.trainingIterations)
+    testPerformance = self.testModel(self.testingIterations)
     return trainPerformance, testPerformance
   
   def trainModel(self, trainIterations):
