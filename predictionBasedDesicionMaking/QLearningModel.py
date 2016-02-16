@@ -8,13 +8,18 @@ class QLearningModel:
     self.learningStep = learningStep
     self.discountingFactor = discountingFactor
     self.epsilon = epsilon
-    self.policy = self.epsilonGreedyPolicy
 
   def setTrainPolicy(self):
-    pass
+    self.policy = self.epsilonGreedyPolicy
   
   def setTestPolicy(self):
-    pass
+    self.policy = self.bestNextMovePolicy
+
+  def bestNextMovePolicy(self, currentState, currentStateReward, nextPossibleStates):
+    predictedRewards = self.predictRewards(currentState, currentStateReward, nextPossibleStates)
+    bestReward = max(predictedRewards.values())
+    return choice([state for state in predictedRewards.keys() if predictedRewards[state] == bestReward])
+    
 
   def epsilonGreedyPolicy(self, currentState, currentStateReward, nextPossibleStates):
     if random <= self.epsilon:

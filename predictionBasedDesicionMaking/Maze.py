@@ -2,13 +2,13 @@ class Maze:
   START_STATE = "S"
   KEY_STATE = "K"
   GOAL_STATE = "G"
+  CHOICE_STATE = "C"
   END_STATE = "E"
   
 
-  def __init__(self, noStates):
+  def __init__(self):
     self.reset()
-    self.SimpleStates = range(noStates)
-    self.AllStates = self.SimpleStates + [self.START_STATE, self.END_STATE, self.KEY_STATE, self.GOAL_STATE]
+    self.AllStates = [self.START_STATE, self.END_STATE, self.KEY_STATE, self.GOAL_STATE, self.CHOICE_STATE]
 
   def isNotFinished(self):
     return self.currentState != self.END_STATE
@@ -22,7 +22,6 @@ class Maze:
   def moveTo(self, nextState):
     if self._moveIsNotValid(nextState):
       raise ValueError("{} is not a valid move from {}", nextState, self.currentState)
-
     self.currentState = nextState
     if self.currentState == self.KEY_STATE:
       self.keyVisited = True
@@ -36,18 +35,20 @@ class Maze:
   
   def getPossibleActionsFrom(self, state):
     if state == self.START_STATE:
-      return self.SimpleStates + [self.KEY_STATE, self.GOAL_STATE]
+      return [self.CHOICE_STATE]
     elif state == self.KEY_STATE:
-      return self.SimpleStates
+      return [self.CHOICE_STATE]
     elif state == self.GOAL_STATE:
       return [self.END_STATE]
     elif state == self.END_STATE:
       return []
+    elif state == self.CHOICE_STATE:
+      return [self.KEY_STATE, self.GOAL_STATE]
     else:
-      return self.SimpleStates[0:state] + self.SimpleStates[state+1:len(self.SimpleStates)] + [self.KEY_STATE, self.GOAL_STATE]
+      raise ValueError("{} state is not recognized", state)
     
   def getRewardFor(self, state):
     if state == self.GOAL_STATE:
-      return 1 if self.keyVisited else -1
+      return 1# if self.keyVisited else -1
     else:
        return 0

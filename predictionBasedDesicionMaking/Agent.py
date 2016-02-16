@@ -36,6 +36,7 @@ class Agent:
     while self.maze.isNotFinished():
       accumulatedReward += self._performMazeIteration()
       mazeSolvedInStep += 1
+    print "\n\n"
     return mazeSolvedInStep, accumulatedReward
  
   def _performMazeIteration(self):
