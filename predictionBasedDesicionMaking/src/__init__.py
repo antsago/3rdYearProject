@@ -5,3 +5,5 @@ from agent import Agent
 from qLearningModel import QLearningModel
 from htmModel import HTMModel
 from confusionMatrix import ConfusionMatrix
+from performanceResult import PerformanceResult
+from performanceRecord import PerformanceRecord

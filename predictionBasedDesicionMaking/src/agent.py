@@ -1,5 +1,5 @@
 from random import choice, random
-from confusionMatrix import ConfusionMatrix
+from performanceRecord import PerformanceRecord
 
 class Agent:
 
@@ -7,37 +7,33 @@ class Agent:
     self.model = model
     self.maze = maze
     self.epsilon = epsilon
-    self.predictedReward = 0
 
   def solveMaze(self, noTimes):
-    self.confusionMatrix = ConfusionMatrix(self.maze.POSSIBLE_REWARDS)
-
-    for iteration in range(noTimes):
-      self._solveMaze()
-
-    return self.confusionMatrix
+    return {iteration: self._solveMaze() for iteration in range(noTimes)}
 
   def _solveMaze(self):
-    self._moveUntilMazeIsSolved()
+    performance = self._moveUntilMazeIsSolved()
     self.model.problemFinished()
     self.maze.reset()
+
+    return performance
   
   def _moveUntilMazeIsSolved(self):
-    mazeSolvedInStep = 0
-    accumulatedReward = 0
+    performanceRecord = PerformanceRecord(self.maze.POSSIBLE_REWARDS)
+
     while self.maze.isNotFinished():
-      accumulatedReward += self._makeMove()
-      mazeSolvedInStep += 1
-    return mazeSolvedInStep, accumulatedReward
+      currentStateReward, nextStatePredictedReward = self._makeMove()
+      performanceRecord.recordMove(currentStateReward, nextStatePredictedReward)
+
+    return performanceRecord
  
   def _makeMove(self):
     nextPossibleStates = self.maze.getPossibleActions()
     currentStateReward = self.maze.getReward()
-    self.confusionMatrix.addObservation(currentStateReward, self.predictedReward)
-
     nextState = self._epsilonGreedy(self.maze.currentState, currentStateReward, nextPossibleStates)
-    self.predictedReward = self._moveTo(self.maze.currentState, currentStateReward, nextState) 
-    return currentStateReward
+
+    predictedReward = self._moveTo(self.maze.currentState, currentStateReward, nextState) 
+    return currentStateReward, predictedReward
 
   def _epsilonGreedy(self, currentState, currentStateReward, nextPossibleStates):
     if random <= self.epsilon:

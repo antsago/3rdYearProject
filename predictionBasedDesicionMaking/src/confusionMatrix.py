@@ -10,6 +10,8 @@ class ConfusionMatrix(JSONEncoder):
     self.rewardClasses = rewardClasses
 
   def addObservation(self, real, predicted):
+    if predicted == None:
+      return
     self.confusionMatrix[real][predicted] += 1
   
   def merge(self, other):
