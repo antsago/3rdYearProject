@@ -3,15 +3,17 @@ from performanceRecord import PerformanceRecord
 
 class Agent:
 
-  def __init__(self, maze, model, epsilon = 0.3):
+  def __init__(self, maze, model, degradeEpsilon = True, initialEpsilon = 0.2):
     self.model = model
     self.maze = maze
-    self.epsilon = epsilon
+    self.degradeEpsilon = degradeEpsilon
+    self.epsilon = initialEpsilon
 
   def solveMaze(self, noTimes):
-    return {iteration: self._solveMaze() for iteration in range(noTimes)}
+    return {iteration: self._solveMaze(iteration) for iteration in range(1, noTimes + 1)}
 
-  def _solveMaze(self):
+  def _solveMaze(self,iteration):
+    self.epsilon = 1.0/iteration
     performance = self._moveUntilMazeIsSolved()
     self.model.problemFinished()
     self.maze.reset()
@@ -21,9 +23,11 @@ class Agent:
   def _moveUntilMazeIsSolved(self):
     performanceRecord = PerformanceRecord(self.maze.POSSIBLE_REWARDS)
 
+    #print "\n - Start new maze - "
     while self.maze.isNotFinished():
       currentStateReward, nextStatePredictedReward = self._makeMove()
       performanceRecord.recordMove(currentStateReward, nextStatePredictedReward)
+      #print "Moved to {} with eps {}, reward {} ane predictedReward {}".format(self.maze.currentState, self.epsilon, currentStateReward, nextStatePredictedReward)
 
     return performanceRecord
  
@@ -36,7 +40,7 @@ class Agent:
     return currentStateReward, predictedReward
 
   def _epsilonGreedy(self, currentState, currentStateReward, nextPossibleStates):
-    if random <= self.epsilon:
+    if random >= self.epsilon:
       predictedRewards = self.model.predictRewards(currentState, currentStateReward, nextPossibleStates)
       bestReward = max(predictedRewards.values())
       return choice([state for state in predictedRewards.keys() if predictedRewards[state] == bestReward])

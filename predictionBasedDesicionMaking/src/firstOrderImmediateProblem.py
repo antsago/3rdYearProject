@@ -24,6 +24,6 @@ class FirstOrderImmediateProblem(Maze):
     
   def getRewardFor(self, state):
     if state == self.GOAL_STATE:
-      return 1# if self.keyVisited else -1
+      return 1
     else:
        return 0

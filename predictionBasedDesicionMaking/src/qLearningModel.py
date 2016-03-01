@@ -12,9 +12,10 @@ class QLearningModel:
     pass
 
   def makeMove(self, currentState, currentStateReward, nextState):
-    discountedValue = self.discountingFactor * self.valueTable[nextState] 
+    discountedValue = max(self.discountingFactor * self.valueTable[nextState], currentStateReward)
     valueError = discountedValue - self.valueTable[currentState]
     self.valueTable[currentState] += self.learningStep * valueError
+    return int(self.valueTable[nextState])
 
   def predictRewards(self, currentState, currentStateReward, nextPossibleStates):
     return { state: self.valueTable[state] for state in nextPossibleStates }

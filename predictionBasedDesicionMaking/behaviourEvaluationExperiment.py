@@ -2,18 +2,21 @@ from src import SecondOrderImmediateProblem, FirstOrderImmediateProblem, HTMMode
 import json
 
 def main():
-  noTrials = 2#1000000
-  noIterations = 2#20
+  noTrials = 100
+  noIterations = 1500
   
   performance = PerformanceResult()
   for trial in range(noTrials):
-    maze = FirstOrderImmediateProblem()
-    model = HTMModel(maze.AllStates)
-    agent = Agent(maze, model, 0)
+    maze = FirstOrderImmediateProblem()#SecondOrderImmediateProblem() 
+    model =  HTMModel(maze.AllStates)#QLearningModel(maze.AllStates)
+    agent = Agent(maze, model, degradeEpsilon = True)
     iterationPerformance = agent.solveMaze(noIterations)
     performance.addTrialRecords(iterationPerformance)
   
-  with open("firsImPredResults.json", "w") as resultsFile:
+#  print "\n{}".format(json.dumps(performance.toJSON(), sort_keys=True,
+#                  indent=4, separators=(',', ': ')))
+#  print "\n{}".format(model.valueTable)
+  with open("htmSecondImBehResults.json", "w") as resultsFile:
     resultsFile.write(json.dumps(performance.toJSON()))
 
 if __name__ == "__main__":
