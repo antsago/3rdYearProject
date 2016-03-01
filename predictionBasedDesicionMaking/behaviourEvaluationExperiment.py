@@ -2,8 +2,8 @@ from src import SecondOrderImmediateProblem, FirstOrderImmediateProblem, HTMMode
 import json
 
 def main():
-  noTrials = 100
-  noIterations = 1500
+  noTrials = 25
+  noIterations = 500
   
   performance = PerformanceResult()
   for trial in range(noTrials):
@@ -16,7 +16,7 @@ def main():
 #  print "\n{}".format(json.dumps(performance.toJSON(), sort_keys=True,
 #                  indent=4, separators=(',', ': ')))
 #  print "\n{}".format(model.valueTable)
-  with open("htmSecondImBehResults.json", "w") as resultsFile:
+  with open("htmFirstImBehResults.json", "w") as resultsFile:
     resultsFile.write(json.dumps(performance.toJSON()))
 
 if __name__ == "__main__":
