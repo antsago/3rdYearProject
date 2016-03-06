@@ -32,7 +32,7 @@ class HTMModel:
      },
   }
 
-  ExtraDataPath = "/home/docker/testSequencePrediction/ExtraSerializedData"
+  ExtraDataPath = "/tmp/htmSerialization"
 
   def __init__(self, listOfStates):
     moduleParameters = self._getModuleParameters(listOfStates)
@@ -58,14 +58,16 @@ class HTMModel:
     return self._executePosition(position, model)
   
   def _saveModel(self):
-    pickledModel = pickle.dumps(self.htm)
-    self.htm._serializeExtraData(self.ExtraDataPath)
-    return pickledModel
+   self.htm.save(self.ExtraDataPath)
+   # pickledModel = pickle.dumps(self.htm)
+   # self.htm._serializeExtraData(self.ExtraDataPath)
+   # return pickledModel
 
   def _loadModel(self, pickledModel):
-    model = pickle.loads(pickledModel)
-    model._deSerializeExtraData(self.ExtraDataPath)
-    return model
+    #model = pickle.loads(pickledModel)
+    #model._deSerializeExtraData(self.ExtraDataPath)
+    #return model
+    return self.htm.load(self.ExtraDataPath)
 
   def _executePosition(self, position, model):
     modelInput = self._createInput(position)

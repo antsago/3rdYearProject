@@ -1,4 +1,4 @@
-from random import choice, random
+from random import choice, random, SystemRandom
 from performanceRecord import PerformanceRecord
 
 class Agent:
@@ -8,12 +8,13 @@ class Agent:
     self.maze = maze
     self.degradeEpsilon = degradeEpsilon
     self.epsilon = initialEpsilon
+    self.random = SystemRandom()
 
   def solveMaze(self, noTimes):
     return {iteration: self._solveMaze(iteration) for iteration in range(1, noTimes + 1)}
 
   def _solveMaze(self,iteration):
-    self.epsilon = 1.0/iteration
+    self.epsilon = min(0.9, 100.0/iteration)#1.0/iteration
     performance = self._moveUntilMazeIsSolved()
     self.model.problemFinished()
     self.maze.reset()
@@ -23,11 +24,11 @@ class Agent:
   def _moveUntilMazeIsSolved(self):
     performanceRecord = PerformanceRecord(self.maze.POSSIBLE_REWARDS)
 
-    #print "\n - Start new maze - "
+    print "\n - Start new maze - "
     while self.maze.isNotFinished():
       currentStateReward, nextStatePredictedReward = self._makeMove()
       performanceRecord.recordMove(currentStateReward, nextStatePredictedReward)
-      #print "Moved to {} with eps {}, reward {} ane predictedReward {}".format(self.maze.currentState, self.epsilon, currentStateReward, nextStatePredictedReward)
+      print "Moved to {} with eps {}, reward {} ane predictedReward {}".format(self.maze.currentState, self.epsilon, currentStateReward, nextStatePredictedReward)
 
     return performanceRecord
  
@@ -40,12 +41,13 @@ class Agent:
     return currentStateReward, predictedReward
 
   def _epsilonGreedy(self, currentState, currentStateReward, nextPossibleStates):
-    if random >= self.epsilon:
+    if self.random.random() > self.epsilon:
+      print "Not random"
       predictedRewards = self.model.predictRewards(currentState, currentStateReward, nextPossibleStates)
       bestReward = max(predictedRewards.values())
-      return choice([state for state in predictedRewards.keys() if predictedRewards[state] == bestReward])
+      return self.random.choice([state for state in predictedRewards.keys() if predictedRewards[state] == bestReward])
     else:
-      return choice(nextPossibleStates)
+      return self.random.choice(nextPossibleStates)
 
   def _moveTo(self, currentState, currentStateReward, nextState):
     self.maze.moveTo(nextState)
