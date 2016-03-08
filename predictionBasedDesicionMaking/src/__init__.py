@@ -7,3 +7,4 @@ from htmModel import HTMModel
 from confusionMatrix import ConfusionMatrix
 from performanceResult import PerformanceResult
 from performanceRecord import PerformanceRecord
+from multiStepProblem import MultiStepProblem

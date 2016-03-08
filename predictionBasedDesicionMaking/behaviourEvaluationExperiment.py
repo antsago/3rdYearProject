@@ -1,4 +1,4 @@
-from src import SecondOrderImmediateProblem, FirstOrderImmediateProblem, HTMModel, Agent, QLearningModel, PerformanceResult
+from src import SecondOrderImmediateProblem, FirstOrderImmediateProblem, HTMModel, Agent, QLearningModel, PerformanceResult, MultiStepProblem
 import json
 
 def main():
@@ -7,8 +7,8 @@ def main():
 
   performance = PerformanceResult()
   for trial in range(noTrials):
-    maze = SecondOrderImmediateProblem()#FirstOrderImmediateProblem()
-    model =  HTMModel(maze.AllStates)#QLearningModel(maze.AllStates)
+    maze = MultiStepProblem()#SecondOrderImmediateProblem()#FirstOrderImmediateProblem()
+    model = HTMModel(maze.AllStates)#QLearningModel(maze.AllStates)
     agent = Agent(maze, model, degradeEpsilon = True)
     iterationPerformance = agent.solveMaze(noIterations)
     performance.addTrialRecords(iterationPerformance)
@@ -18,7 +18,7 @@ def main():
 #  print "\n{}".format(json.dumps(performance.toJSON(), sort_keys=True,
 #                  indent=4, separators=(',', ': ')))
 #  print "\n{}".format(model.valueTable)
-  with open("htmSecondImBehResults.json", "w") as resultsFile:
+  with open("htmMultiBehResults.json", "w") as resultsFile:
     resultsFile.write(json.dumps(performance.toJSON()))
 
 if __name__ == "__main__":

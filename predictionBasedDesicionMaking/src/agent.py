@@ -14,7 +14,8 @@ class Agent:
     return {iteration: self._solveMaze(iteration) for iteration in range(1, noTimes + 1)}
 
   def _solveMaze(self,iteration):
-    self.epsilon = min(0.9, 100.0/iteration)#1.0/iteration
+    if self.degradeEpsilon:
+      self.epsilon = min(0.9, 100.0/iteration)#1.0/iteration
     performance = self._moveUntilMazeIsSolved()
     self.model.problemFinished()
     self.maze.reset()
@@ -28,7 +29,7 @@ class Agent:
     while self.maze.isNotFinished():
       currentStateReward, nextStatePredictedReward = self._makeMove()
       performanceRecord.recordMove(currentStateReward, nextStatePredictedReward)
-      print "Moved to {} with eps {}, reward {} ane predictedReward {}".format(self.maze.currentState, self.epsilon, currentStateReward, nextStatePredictedReward)
+      print "Moved to {} with eps {}, reward {} and predictedReward {}".format(self.maze.currentState, self.epsilon, currentStateReward, nextStatePredictedReward)
 
     return performanceRecord
  
