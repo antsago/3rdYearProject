@@ -42,9 +42,9 @@ class ExperimentFactory():
       self.epsilonPolicy = lambda iteration: 1.0
     elif experimentType != self.BEH_TYPE:
       raise ValueError("Experiment type {} not recognized", experimentType)
-    elif modelName == self.Q_MODEL or (modelName == self.HTM_MODEL and (problemName == self.BASIC_PBM or problem == self.MULTI_STEP_PBM)):
+    elif modelName == self.Q_MODEL or (modelName == self.HTM_MODEL and (problemName == self.BASIC_PBM or problemName == self.MULTI_STEP_PBM)):
       self.epsilonPolicy = lambda iteration: 1.0/iteration
-    elif modelName == self.HTM_MODEL and problem == self.SEC_ORDER_PBM:
+    elif modelName == self.HTM_MODEL and problemName == self.SEC_ORDER_PBM:
       self.epsilonPolicy = lambda iteration: min(0.9, 100.0/iteration)
     else:
       raise ValueError("Combination of type: {},  problem: {} and model: {} not recognized", experimentType, problemName, modelName)

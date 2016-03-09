@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from src import ExperimentFactory
 import sys
+import traceback
 
 if __name__ == "__main__":
     try:
@@ -21,8 +22,8 @@ if __name__ == "__main__":
       experiment.saveResults(experimentName)
       
       print "Results saved in file {}".format(experimentName)
-    except Exception as e:
-      print e
+    except:
+      print traceback.format_exc()
       print "Usage: runExperiment {}|{} {}|{}|{} {}|{} noTrials noIterations".format(ExperimentFactory.PRED_TYPE,
                                                                                      ExperimentFactory.BEH_TYPE,
                                                                                      ExperimentFactory.BASIC_PBM,
