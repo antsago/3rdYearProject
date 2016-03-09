@@ -1,6 +1,6 @@
 from nupic.frameworks.opf.modelfactory import ModelFactory
 from random import choice
-import model_params
+import htmModelParams
 import pickle
 
 class HTMModel:
@@ -59,14 +59,8 @@ class HTMModel:
   
   def _saveModel(self):
    self.htm.save(self.ExtraDataPath)
-   # pickledModel = pickle.dumps(self.htm)
-   # self.htm._serializeExtraData(self.ExtraDataPath)
-   # return pickledModel
 
   def _loadModel(self, pickledModel):
-    #model = pickle.loads(pickledModel)
-    #model._deSerializeExtraData(self.ExtraDataPath)
-    #return model
     return self.htm.load(self.ExtraDataPath)
 
   def _executePosition(self, position, model):
@@ -81,7 +75,7 @@ class HTMModel:
     return dict(zip(self.Headers, position))
 
   def _getModuleParameters(self, listOfStates):
-    parameters = model_params.MODEL_PARAMS
+    parameters = htmModelParams.MODEL_PARAMS
     self.Encoders["currentState"]["categoryList"] = listOfStates
     self.Encoders["nextState"]["categoryList"] = listOfStates
     parameters["modelParams"]["sensorParams"]["encoders"] = self.Encoders

@@ -8,3 +8,5 @@ from confusionMatrix import ConfusionMatrix
 from performanceResult import PerformanceResult
 from performanceRecord import PerformanceRecord
 from multiStepProblem import MultiStepProblem
+from experiment import Experiment
+from experimentFactory import ExperimentFactory
