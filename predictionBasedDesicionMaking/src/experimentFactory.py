@@ -1,4 +1,4 @@
-from src import SecondOrderImmediateProblem, FirstOrderImmediateProblem, HTMModel, QLearningModel, MultiStepProblem, Experiment
+from src import SecondOrderImmediateProblem, FirstOrderImmediateProblem, HTMModel, QLearningModel, MultiStepProblem, Experiment, HTMModuleFactory
 
 class ExperimentFactory():
   BASIC_PBM = "Basic"
@@ -29,7 +29,8 @@ class ExperimentFactory():
    
   def parseModel(self, modelName):
     if modelName == self.HTM_MODEL:
-      self.model = HTMModel(self.problem.AllStates)
+      module = HTMModuleFactory().createModule(self.problem.AllStates)
+      self.model = HTMModel(module)
     elif modelName == self.Q_MODEL:
       self.model = QLearningModel(self.problem.AllStates)
     else:

@@ -3,6 +3,7 @@ from firstOrderImmediateProblem import FirstOrderImmediateProblem
 from secondOrderImmediateProblem import SecondOrderImmediateProblem
 from agent import Agent
 from qLearningModel import QLearningModel
+from htmModuleFactory import HTMModuleFactory
 from htmModel import HTMModel
 from confusionMatrix import ConfusionMatrix
 from performanceResult import PerformanceResult

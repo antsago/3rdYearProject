@@ -1,42 +1,11 @@
-from nupic.frameworks.opf.modelfactory import ModelFactory
 from random import choice
-import htmModelParams
-import pickle
 
 class HTMModel:
   Headers = ["currentState", "nextState", "reward"]
-  Encoders = \
-  {
-    'currentState': {
-        'fieldname':"currentState",
-        'name':'currentState',
-        'type':'CategoryEncoder',
-        'categoryList':["B", "S","C","K","G", "E"],
-        'w':21
-     },
-    'nextState': {
-        'fieldname':"nextState",
-        'name':'nextState',
-        'type':'CategoryEncoder',
-        'categoryList':["B", "S","C","K","G", "E"],
-        'w':21
-     },
-    'reward': {
-        'fieldname':"reward",
-        'name':'reward',
-        'type':'ScalarEncoder',
-        'maxval':1,
-        'minval':-1,
-        'w':21,
-        'resolution':1,
-     },
-  }
-
   ExtraDataPath = "/tmp/htmSerialization"
 
-  def __init__(self, listOfStates):
-    moduleParameters = self._getModuleParameters(listOfStates)
-    self.htm = self._createHTMModule(moduleParameters)
+  def __init__(self, htmModule):
+    self.htm = htmModule
 
   def problemFinished(self):
     self.htm.resetSequenceStates()
@@ -73,15 +42,3 @@ class HTMModel:
    
   def _createInput(self, position):
     return dict(zip(self.Headers, position))
-
-  def _getModuleParameters(self, listOfStates):
-    parameters = htmModelParams.MODEL_PARAMS
-    self.Encoders["currentState"]["categoryList"] = listOfStates
-    self.Encoders["nextState"]["categoryList"] = listOfStates
-    parameters["modelParams"]["sensorParams"]["encoders"] = self.Encoders
-    return parameters
-
-  def _createHTMModule(self, moduleParameters):
-    model = ModelFactory.create(moduleParameters)
-    model.enableInference({'predictedField': 'reward'})
-    return model
