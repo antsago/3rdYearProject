@@ -3,10 +3,8 @@ import json
 
 class Experiment():
 
-  def __init__(self, problem, model, epsilonPolicy):
-    self.problem = problem
-    self.model = model
-    self.agent = Agent(problem, model, epsilonPolicy)
+  def __init__(self, agent):
+    self.agent = agent
 
   def run(self, noIterations, noTrials):
     self.results = PerformanceResult()

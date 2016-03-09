@@ -4,3 +4,4 @@ from test_performanceRecord import TestPerformanceRecord
 from test_performanceResult import TestPerformanceResult
 from test_qLearningModel import TestQLearningModel
 from test_htmModel import TestHTMModel
+from test_experiment import TestExperiment

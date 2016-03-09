@@ -1,4 +1,4 @@
-from src import SecondOrderImmediateProblem, FirstOrderImmediateProblem, HTMModel, QLearningModel, MultiStepProblem, Experiment, HTMModuleFactory
+from src import SecondOrderImmediateProblem, FirstOrderImmediateProblem, HTMModel, QLearningModel, MultiStepProblem, Experiment, HTMModuleFactory, Agent
 
 class ExperimentFactory():
   BASIC_PBM = "Basic"
@@ -15,7 +15,8 @@ class ExperimentFactory():
     self.parseProblem(problem)
     self.parseModel(model)
     self.parseEpsilonPolicy(experimentType, problem, model)
-    return Experiment(self.problem, self.model, self.epsilonPolicy)
+    agent = Agent(self.problem, self.model, self.epsilonPolicy)
+    return Experiment(agent)
 
   def parseProblem(self, problemName):
     if problemName == self.BASIC_PBM:
