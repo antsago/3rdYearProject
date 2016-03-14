@@ -3,13 +3,14 @@ import json
 
 class Experiment():
 
-  def __init__(self, agent):
-    self.agent = agent
+  def __init__(self, agentFactory):
+    self.agentFactory = agentFactory
 
   def run(self, noIterations, noTrials):
     self.results = PerformanceResult()
     for trial in range(noTrials):
-      iterationPerformance = self.agent.solveMaze(noIterations)
+      agent = self.agentFactory.createAgent()
+      iterationPerformance = agent.solveMaze(noIterations)
       self.results.addTrialRecords(iterationPerformance)
     return self.results
   
