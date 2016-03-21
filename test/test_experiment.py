@@ -1,6 +1,6 @@
 from mock import MagicMock
 from unittest import TestCase
-from src import Experiment, Agent, PerformanceRecord
+from src import Experiment, AgentFactory, PerformanceRecord, Agent
 
 class TestExperiment(TestCase):
 
@@ -8,10 +8,12 @@ class TestExperiment(TestCase):
     noTrials = 2
     noIterations = 2
 
-    mockedAgent = Agent(None, None, None)
     performance = {iteration: PerformanceRecord([0]) for iteration in range(noIterations)}
+    mockedAgent = Agent(None, None, None)
     mockedAgent.solveMaze = MagicMock(return_value=performance)
-    experiment = Experiment(mockedAgent)
+    mockedAgentFactory = AgentFactory(None,None,None)
+    mockedAgentFactory.createAgent = MagicMock(return_value=mockedAgent)
+    experiment = Experiment(mockedAgentFactory)
     
     experiment.run(1, noTrials)
 

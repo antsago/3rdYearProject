@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from src import ExperimentFactory
+from src import AgentFactory, Experiment
 import sys
 import traceback
 
@@ -15,8 +15,8 @@ if __name__ == "__main__":
 
       experimentName = "{}-{}-{}.json".format(expType, modelName, problemName)
 
-      factory = ExperimentFactory()
-      experiment = factory.createExperiment(expType, problemName, modelName)
+      agentFactory = AgentFactory(expType, problemName, modelName)
+      experiment = Experiment(agentFactory)
 
       experiment.run(noIterations, noTrials)
       experiment.saveResults(experimentName)
@@ -24,10 +24,10 @@ if __name__ == "__main__":
       print "Results saved in file {}".format(experimentName)
     except:
       print traceback.format_exc()
-      print "Usage: runExperiment {}|{} {}|{}|{} {}|{} noTrials noIterations".format(ExperimentFactory.PRED_TYPE,
-                                                                                     ExperimentFactory.BEH_TYPE,
-                                                                                     ExperimentFactory.BASIC_PBM,
-                                                                                     ExperimentFactory.SEC_ORDER_PBM,
-                                                                                     ExperimentFactory.MULTI_STEP_PBM,
-                                                                                     ExperimentFactory.HTM_MODEL,
-                                                                                     ExperimentFactory.Q_MODEL)
+      print "Usage: runExperiment {}|{} {}|{}|{} {}|{} noTrials noIterations".format(AgentFactory.PRED_TYPE,
+                                                                                     AgentFactory.BEH_TYPE,
+                                                                                     AgentFactory.BASIC_PBM,
+                                                                                     AgentFactory.SEC_ORDER_PBM,
+                                                                                     AgentFactory.MULTI_STEP_PBM,
+                                                                                     AgentFactory.HTM_MODEL,
+                                                                                     AgentFactory.Q_MODEL)

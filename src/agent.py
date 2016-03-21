@@ -13,22 +13,23 @@ class Agent:
     return {iteration: self._solveMaze(iteration) for iteration in range(1, noTimes + 1)}
 
   def _solveMaze(self,iteration):
-    self.epsilon = self.epsilonPolicy(iteration) 
-    performance = self._moveUntilMazeIsSolved()
+    performance = self._moveUntilMazeIsSolved(iteration)
     self.model.problemFinished()
     self.maze.reset()
 
     return performance
   
-  def _moveUntilMazeIsSolved(self):
+  def _moveUntilMazeIsSolved(self, iteration):
+    self.epsilon = self.epsilonPolicy(iteration) 
     performanceRecord = PerformanceRecord(self.maze.POSSIBLE_REWARDS)
 
     print "\n - Start new maze - "
     while self.maze.isNotFinished():
       currentStateReward, nextStatePredictedReward = self._makeMove()
       performanceRecord.recordMove(currentStateReward, nextStatePredictedReward)
-      print "Moved to {} with epsilon {}, reward {} and predictedReward {}".format(self.maze.currentState, self.epsilon, currentStateReward, nextStatePredictedReward)
+      print "{}: Moved to {} with epsilon {}, reward {} and predictedReward {}".format(iteration, self.maze.currentState, self.epsilon, currentStateReward, nextStatePredictedReward)
 
+    print self.model.valueTable
     return performanceRecord
  
   def _makeMove(self):

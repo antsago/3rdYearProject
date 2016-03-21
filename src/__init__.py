@@ -10,4 +10,4 @@ from performanceResult import PerformanceResult
 from performanceRecord import PerformanceRecord
 from multiStepProblem import MultiStepProblem
 from experiment import Experiment
-from experimentFactory import ExperimentFactory
+from agentFactory import AgentFactory
