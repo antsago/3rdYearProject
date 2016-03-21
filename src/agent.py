@@ -29,7 +29,6 @@ class Agent:
       performanceRecord.recordMove(currentStateReward, nextStatePredictedReward)
       print "{}: Moved to {} with epsilon {}, reward {} and predictedReward {}".format(iteration, self.maze.currentState, self.epsilon, currentStateReward, nextStatePredictedReward)
 
-    print self.model.valueTable
     return performanceRecord
  
   def _makeMove(self):
